@@ -2,11 +2,11 @@ CREATE DATABASE CRUD;
 
 USE CRUD;
 
-CREATE TABLE users (
+CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(255) NOT NULL,
+    usuariosname VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
-    role ENUM('admin', 'user') NOT NULL
+    role ENUM('admin', 'usuario') NOT NULL
 );
 
 CREATE TABLE categorias (
@@ -28,4 +28,12 @@ CREATE TABLE teste (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
     descricao TEXT NOT NULL
+);
+
+CREATE TABLE exemplo (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    valor1 VARCHAR(100) NOT NULL,
+    valor2 INT NOT NULL,
+    valor3 DATE NOT NULL,
+    valor4 DECIMAL(8,2) NOT NULL
 );

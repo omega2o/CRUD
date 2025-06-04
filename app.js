@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const expressLayouts = require('express-ejs-layouts');
 const indexRoutes = require('./routes/indexRoutes');
-const userRoutes = require('./routes/userRoutes');
+const usuariosRoutes = require('./routes/usuariosRoutes');
 const produtoRoutes = require('./routes/produtoRoutes');
 const categoriaRoutes = require('./routes/categoriaRoutes');
 const testeRoutes = require('./routes/testeRoutes');
@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
 app.use('/', indexRoutes);
-app.use('/users', userRoutes);
+app.use('/usuarios', usuariosRoutes);
 app.use('/produtos', produtoRoutes);
 app.use('/categorias', categoriaRoutes);
 app.use('/teste', testeRoutes);
