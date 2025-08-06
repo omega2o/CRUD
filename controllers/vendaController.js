@@ -1,92 +1,98 @@
-//crie o conteudo deste arquivo vendaController.js com o seguinte conteudo: tabela de vendas com os campos: id, data, valor, quantidade, produto_id
+const Usuarios = require('../models/usuariosModel');
+const { Op } = require('sequelize');
 
-const Venda = require('../models/vendaModel');
-
-const vendaController = {
-    createVenda: (req, res) => {
-        const newVenda = {
-            data: req.body.data,
-            valor: req.body.valor,
-            quantidade: req.body.quantidade,
-            produto_id: req.body.produto_id,
-        };
-
-        Venda.create(newVenda, (err, vendaId) => {
-            if (err) {
-                return res.status(500).json({ error: err });
-            }
-            res.redirect('/vendas');
-        });
+const usuariosController = {
+    createUsuarios: async (req, res) => {
+        try {
+            await Usuarios.create({
+                usuariosname: req.body.usuariosname,
+                password: req.body.password,
+                role: req.body.role
+            });
+            res.redirect('/usuarios');
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
     },
 
-    getVendaById: (req, res) => {
-        const vendaId = req.params.id;
-
-        Venda.findById(vendaId, (err, venda) => {
-            if (err) {
-                return res.status(500).json({ error: err });
+    getUsuariosById: async (req, res) => {
+        try {
+            const usuario = await Usuarios.findByPk(req.params.id);
+            if (!usuario) {
+                return res.status(404).json({ message: 'Usuário não encontrado' });
             }
-            if (!venda) {
-                return res.status(404).json({ message: 'Venda not found' });
-            }
-            res.render('vendas/show', { venda });
-        });
+            res.render('usuarios/show', { usuarios: usuario });
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
     },
 
-    getAllVendas: (req, res) => {
-        Venda.getAll((err, vendas) => {
-            if (err) {
-                return res.status(500).json({ error: err });
-            }
-            res.render('vendas/index', { vendas });
-        });
+    getAllUsuarioss: async (req, res) => {
+        try {
+            const usuarios = await Usuarios.findAll();
+            res.render('usuarios/index', { usuarios });
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
     },
 
     renderCreateForm: (req, res) => {
-        res.render('vendas/create');
+        res.render('usuarios/create');
     },
 
-    renderEditForm: (req, res) => {
-        const vendaId = req.params.id;
-
-        Venda.findById(vendaId, (err, venda) => {
-            if (err) {
-                return res.status(500).json({ error: err });
+    renderEditForm: async (req, res) => {
+        try {
+            const usuario = await Usuarios.findByPk(req.params.id);
+            if (!usuario) {
+                return res.status(404).json({ message: 'Usuário não encontrado' });
             }
-            if (!venda) {
-                return res.status(404).json({ message: 'Venda not found' });
-            }
-            res.render('vendas/edit', { venda });
-        });
+            res.render('usuarios/edit', { usuarios: usuario });
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
     },
 
-    updateVenda: (req, res) => {
-        const vendaId = req.params.id;
-        const updatedVenda = {
-            data: req.body.data,
-            valor: req.body.valor,
-            quantidade: req.body.quantidade,
-            produto_id: req.body.produto_id,
-        };
-
-        Venda.update(vendaId, updatedVenda, (err, result) => {
-            if (err) {
-                return res.status(500).json({ error: err });
-            }
-            res.redirect('/vendas');
-        });
+    updateUsuarios: async (req, res) => {
+        try {
+            await Usuarios.update({
+                usuariosname: req.body.usuariosname,
+                password: req.body.password,
+                role: req.body.role
+            }, {
+                where: { id: req.params.id }
+            });
+            res.redirect('/usuarios');
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
     },
 
-    deleteVenda: (req, res) => {
-        const vendaId = req.params.id;
+    deleteUsuarios: async (req, res) => {
+        try {
+            await Usuarios.destroy({
+                where: { id: req.params.id }
+            });
+            res.redirect('/usuarios');
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    },
 
-        Venda.delete(vendaId, (err, result) => {
-            if (err) {
-                return res.status(500).json({ error: err });
-            }
-            res.redirect('/vendas');
-        });
+    searchUsuarioss: async (req, res) => {
+        try {
+            const search = req.query.search || '';
+            const usuarios = await Usuarios.findAll({
+                where: {
+                    usuariosname: {
+                        [Op.like]: `%${search}%`
+                    }
+                }
+            });
+            res.json({ usuarios });
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
     }
 };
 
-module.exports = vendaController;
+module.exports = usuariosController;
